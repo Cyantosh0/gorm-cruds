@@ -8,6 +8,7 @@ import (
 	"go.uber.org/fx"
 
 	"github.com/Cyantosh0/gorm-crud/config"
+	user "github.com/Cyantosh0/gorm-crud/user_crud"
 )
 
 func main() {
@@ -15,6 +16,7 @@ func main() {
 
 	fx.New(
 		fx.Options(config.Module),
+		fx.Options(user.Module),
 		fx.Invoke(startApp),
 	).Run()
 }
@@ -22,12 +24,14 @@ func main() {
 func startApp(
 	lifecycle fx.Lifecycle,
 	router config.Router,
+	user_route user.UserRoute,
 	migrations config.Migrations,
 ) {
 	lifecycle.Append(
 		fx.Hook{
 			OnStart: func(context.Context) error {
 				migrations.Migrate()
+				user_route.Setup()
 				_ = router.Run()
 				return nil
 			},
