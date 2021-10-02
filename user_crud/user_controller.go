@@ -26,7 +26,7 @@ func (uc UserController) CreateUser(c *gin.Context) {
 		return
 	}
 
-	if err := uc.repository.Save(&user); err != nil {
+	if err := uc.repository.Save(&user).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
@@ -40,7 +40,7 @@ func (u UserController) UpdateUser(c *gin.Context) {
 	paramID := c.Param("id")
 
 	var user models.User
-	err := u.repository.First(&user, "id = ?", paramID)
+	err := u.repository.First(&user, "id = ?", paramID).Error
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err,
@@ -55,7 +55,7 @@ func (u UserController) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	if err := u.repository.Save(&user); err != nil {
+	if err := u.repository.Save(&user).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
