@@ -8,6 +8,7 @@ type User struct {
 	ID        uint       `json:"id" form:"id"`
 	Name      string     `json:"name" form:"name"`
 	Email     string     `json:"email" form:"email"`
+	Address   string     `json:"address" form:"address"`
 	Age       int        `json:"age" form:"age"`
 	Height    float32    `json:"height" form:"height"`
 	Public    bool       `json:"public" form:"public"`
