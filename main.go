@@ -15,9 +15,11 @@ func main() {
 	godotenv.Load()
 
 	fx.New(
-		fx.Options(config.Module),
-		fx.Options(user.Module),
-		fx.Invoke(startApp),
+		fx.Options(
+			config.Module,
+			user.Module,
+			fx.Invoke(startApp),
+		),
 	).Run()
 }
 
@@ -32,7 +34,7 @@ func startApp(
 			OnStart: func(context.Context) error {
 				migrations.Migrate()
 				user_route.Setup()
-				_ = router.Run()
+				go router.Run()
 				return nil
 			},
 		},
