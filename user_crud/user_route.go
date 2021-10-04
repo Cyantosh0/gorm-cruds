@@ -24,4 +24,5 @@ func (u UserRoute) Setup() {
 	user.GET("/user/:id", u.userController.RetrieveUser)
 	user.POST("/user", u.userController.CreateUser)
 	user.PUT("/user/:id", u.userController.UpdateUser)
+	user.DELETE("/user/:id", u.userController.DeleteUser)
 }

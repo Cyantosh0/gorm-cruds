@@ -84,11 +84,25 @@ func (u UserController) GellAllUsers(c *gin.Context) {
 	var users []models.User
 	err := u.repository.Find(&users).Error
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
 		return
 	}
 
 	c.JSON(200, gin.H{"data": users})
+}
+
+func (u UserController) DeleteUser(c *gin.Context) {
+	id := c.Param("id")
+
+	err := u.repository.Delete(&models.User{}, id).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{"data": "user deleted"})
 }
