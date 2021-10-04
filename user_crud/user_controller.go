@@ -5,6 +5,7 @@ import (
 
 	"github.com/Cyantosh0/gorm-crud/models"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/copier"
 )
 
 type UserController struct {
@@ -39,27 +40,36 @@ func (uc UserController) CreateUser(c *gin.Context) {
 func (u UserController) UpdateUser(c *gin.Context) {
 	paramID := c.Param("id")
 
-	var user models.User
-	err := u.repository.First(&user, "id = ?", paramID).Error
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err,
-		})
-		return
+	type inputType struct {
+		models.User
+		ShouldUpdate bool `json:"shouldUpdate" form:"shouldUpdate"`
 	}
-
-	if err := c.ShouldBindJSON(&user); err != nil {
+	var input inputType
+	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	if err := u.repository.Save(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
-		})
-		return
+	var user models.User
+	if input.ShouldUpdate {
+		err := u.repository.First(&user, "id = ?", paramID).Error
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err,
+			})
+			return
+		}
+
+		_ = copier.Copy(&user, input)
+
+		if err := u.repository.Save(&user).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err,
+			})
+			return
+		}
 	}
 
 	c.JSON(200, gin.H{"data": user})

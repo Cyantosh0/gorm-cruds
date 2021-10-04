@@ -5,7 +5,7 @@ import (
 )
 
 type User struct {
-	ID        uint       `json:"id" form:"id"`
+	ID        uint       `json:"id" form:"id" copier:"-"`
 	Name      string     `json:"name" form:"name"`
 	Email     string     `json:"email" form:"email"`
 	Address   string     `json:"address" form:"address"`
@@ -13,6 +13,6 @@ type User struct {
 	Height    float32    `json:"height" form:"height"`
 	Public    bool       `json:"public" form:"public"`
 	Birthday  *time.Time `json:"birthday" form:"birthday"` // Should take format of "2002-01-22T15:04:05Z"
-	CreatedAt time.Time  `json:"created_at" form:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at" form:"updated_at"`
+	CreatedAt time.Time  `json:"created_at" form:"created_at" copier:"-"`
+	UpdatedAt time.Time  `json:"updated_at" form:"updated_at" copier:"-"`
 }
