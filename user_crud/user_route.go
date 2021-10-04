@@ -20,6 +20,7 @@ func NewUserRoute(
 func (u UserRoute) Setup() {
 	user := u.handler.Group("/")
 
+	user.GET("/users", u.userController.GellAllUsers)
 	user.GET("/user/:id", u.userController.RetrieveUser)
 	user.POST("/user", u.userController.CreateUser)
 	user.PUT("/user/:id", u.userController.UpdateUser)

@@ -79,3 +79,16 @@ func (u UserController) RetrieveUser(c *gin.Context) {
 
 	c.JSON(200, gin.H{"data": user})
 }
+
+func (u UserController) GellAllUsers(c *gin.Context) {
+	var users []models.User
+	err := u.repository.Find(&users).Error
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{"data": users})
+}
