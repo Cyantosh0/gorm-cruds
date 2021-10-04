@@ -64,3 +64,18 @@ func (u UserController) UpdateUser(c *gin.Context) {
 
 	c.JSON(200, gin.H{"data": user})
 }
+
+func (u UserController) RetrieveUser(c *gin.Context) {
+	paramID := c.Param("id")
+
+	var user models.User
+	err := u.repository.First(&user, "id = ?", paramID).Error
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{"data": user})
+}
