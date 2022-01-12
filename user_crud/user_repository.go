@@ -19,8 +19,6 @@ func (ur UserRepository) UpdateBasicInformation(user *models.User) error {
 	return ur.DB.Model(user).Updates(map[string]interface{}{
 		"address":    user.Address,
 		"age":        user.Age,
-		"height":     user.Height,
-		"public":     user.Public,
 		"updated_at": time.Now(),
 	}).Error
 }

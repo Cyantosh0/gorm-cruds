@@ -2,17 +2,27 @@ package models
 
 import (
 	"time"
+
+	"github.com/Cyantosh0/gorm-crud/lib"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type User struct {
-	ID        uint       `json:"id" form:"id" copier:"-"`
-	Name      string     `json:"name" form:"name"`
-	Email     string     `json:"email" form:"email"`
-	Address   string     `json:"address" form:"address"`
-	Age       int        `json:"age" form:"age"`
-	Height    float32    `json:"height" form:"height"`
-	Public    bool       `json:"public" form:"public"`
-	Birthday  *time.Time `json:"birthday" form:"birthday"` // Should take format of "2002-01-22T15:04:05Z"
-	CreatedAt time.Time  `json:"created_at" form:"created_at" copier:"-"`
-	UpdatedAt time.Time  `json:"updated_at" form:"updated_at" copier:"-"`
+	ID        lib.BinaryUUID `json:"id"`
+	Name      string         `json:"name"`
+	Email     string         `json:"email"`
+	Password  string         `json:"password"`
+	Address   string         `json:"address"`
+	Age       int            `json:"age"`
+	Gender    bool           `json:"gender"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+}
+
+// BeforeCreate run this before creating user
+func (t *User) BeforeCreate(tx *gorm.DB) error {
+	id, err := uuid.NewRandom()
+	t.ID = lib.BinaryUUID(id)
+	return err
 }
