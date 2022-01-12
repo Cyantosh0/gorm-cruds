@@ -29,7 +29,9 @@ func main() {
 
 func startApp(
 	lifecycle fx.Lifecycle,
+	database config.Database,
 	router config.Router,
+	seed config.Seed,
 	routes routes.Routes,
 	migrations config.Migrations,
 ) {
@@ -37,6 +39,7 @@ func startApp(
 		fx.Hook{
 			OnStart: func(context.Context) error {
 				migrations.Migrate()
+				seed.Run()
 				routes.Setup()
 				go router.Run()
 				return nil
