@@ -8,8 +8,10 @@ import (
 	"go.uber.org/fx"
 
 	"github.com/Cyantosh0/gorm-crud/api/controllers"
+	"github.com/Cyantosh0/gorm-crud/api/middlewares"
 	"github.com/Cyantosh0/gorm-crud/api/repositories"
 	"github.com/Cyantosh0/gorm-crud/api/routes"
+	"github.com/Cyantosh0/gorm-crud/api/services"
 	"github.com/Cyantosh0/gorm-crud/config"
 )
 
@@ -20,7 +22,9 @@ func main() {
 		fx.Options(
 			config.Module,
 			routes.Module,
+			middlewares.Module,
 			controllers.Module,
+			services.Module,
 			repositories.Module,
 			fx.Invoke(startApp),
 		),

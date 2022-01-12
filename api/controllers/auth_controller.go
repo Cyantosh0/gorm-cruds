@@ -6,17 +6,20 @@ import (
 
 	"github.com/Cyantosh0/gorm-crud/api/repositories"
 	"github.com/Cyantosh0/gorm-crud/api/services"
+	"github.com/Cyantosh0/gorm-crud/constants"
 	"github.com/Cyantosh0/gorm-crud/models"
 	"github.com/gin-gonic/gin"
 )
 
 type AuthController struct {
 	userRepository repositories.UserRepository
+	jwtService     services.JWTService
 }
 
-func NewAuthController(userRepository repositories.UserRepository) AuthController {
+func NewAuthController(userRepository repositories.UserRepository, jwtService services.JWTService) AuthController {
 	return AuthController{
 		userRepository: userRepository,
+		jwtService:     jwtService,
 	}
 }
 
@@ -55,7 +58,7 @@ func (ac AuthController) Login(c *gin.Context) {
 		isAdmin = true
 	}
 
-	token, err := services.CreateToken(user.ID, user.Email, isAdmin)
+	token, err := ac.jwtService.CreateToken(user.ID, user.Email, isAdmin)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -64,4 +67,11 @@ func (ac AuthController) Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, token)
+}
+
+func (ac AuthController) AuthenticatedController(c *gin.Context) {
+	userUID := c.MustGet(constants.UID)
+	c.JSON(http.StatusOK, gin.H{
+		constants.UID: userUID,
+	})
 }
