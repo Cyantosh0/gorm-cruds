@@ -1,15 +1,18 @@
-package user
+package routes
 
-import "github.com/Cyantosh0/gorm-crud/config"
+import (
+	"github.com/Cyantosh0/gorm-crud/api/controllers"
+	"github.com/Cyantosh0/gorm-crud/config"
+)
 
 type UserRoute struct {
 	handler        config.Router
-	userController UserController
+	userController controllers.UserController
 }
 
 func NewUserRoute(
 	handler config.Router,
-	userController UserController,
+	userController controllers.UserController,
 ) UserRoute {
 	return UserRoute{
 		handler:        handler,

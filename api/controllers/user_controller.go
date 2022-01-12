@@ -1,18 +1,19 @@
-package user
+package controllers
 
 import (
 	"net/http"
 
+	"github.com/Cyantosh0/gorm-crud/api/repositories"
 	"github.com/Cyantosh0/gorm-crud/lib"
 	"github.com/Cyantosh0/gorm-crud/models"
 	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
-	repository UserRepository
+	repository repositories.UserRepository
 }
 
-func NewUserController(repository UserRepository) UserController {
+func NewUserController(repository repositories.UserRepository) UserController {
 	return UserController{
 		repository: repository,
 	}
