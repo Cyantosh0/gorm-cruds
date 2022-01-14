@@ -5,7 +5,6 @@ import (
 	"github.com/Cyantosh0/gorm-crud/cmd/cli"
 	"github.com/Cyantosh0/gorm-crud/cmd/flags"
 	"github.com/Cyantosh0/gorm-crud/constants"
-	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +20,6 @@ var RootCmd = &cobra.Command{
 
 func init() {
 	flags.Setup(RootCmd)
-	godotenv.Load()
 
 	for _, cmd := range cli.SubCommands {
 		RootCmd.AddCommand(cmd)

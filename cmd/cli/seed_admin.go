@@ -29,11 +29,12 @@ var AdminSeeder = &cobra.Command{
 
 func checkRequiredFlags() error {
 	if !flags.Database || !flags.Seeder {
-		return errors.New("-d -m -s flags are required")
+		return errors.New("-d -s flags are required")
 	}
 	return nil
 }
 
 func runAdminSeeder(migration config.Migrations, seed config.Seed) {
+	migration.Migrate()
 	seed.SeedAdminUser()
 }

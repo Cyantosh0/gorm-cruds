@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/Cyantosh0/gorm-crud/api/repositories"
 	"github.com/Cyantosh0/gorm-crud/api/services"
 	"github.com/Cyantosh0/gorm-crud/constants"
+	"github.com/Cyantosh0/gorm-crud/lib"
 	"github.com/Cyantosh0/gorm-crud/models"
 	"github.com/gin-gonic/gin"
 )
@@ -14,12 +14,18 @@ import (
 type AuthController struct {
 	userRepository repositories.UserRepository
 	jwtService     services.JWTService
+	env            *lib.Env
 }
 
-func NewAuthController(userRepository repositories.UserRepository, jwtService services.JWTService) AuthController {
+func NewAuthController(
+	userRepository repositories.UserRepository,
+	jwtService services.JWTService,
+	env *lib.Env,
+) AuthController {
 	return AuthController{
 		userRepository: userRepository,
 		jwtService:     jwtService,
+		env:            env,
 	}
 }
 
@@ -54,7 +60,7 @@ func (ac AuthController) Login(c *gin.Context) {
 	}
 
 	isAdmin := false
-	if user.Email == os.Getenv("ADMIN_EMAIL") {
+	if user.Email == ac.env.AdminEmail {
 		isAdmin = true
 	}
 

@@ -1,7 +1,6 @@
 package services
 
 import (
-	"os"
 	"time"
 
 	"github.com/Cyantosh0/gorm-crud/constants"
@@ -9,14 +8,18 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-type JWTService struct{}
+type JWTService struct {
+	env *lib.Env
+}
 
-func NewJWTService() JWTService {
-	return JWTService{}
+func NewJWTService(env *lib.Env) JWTService {
+	return JWTService{
+		env: env,
+	}
 }
 
 //Creating Access Token
-func (JWTService) CreateToken(userId lib.BinaryUUID, email string, isAdmin bool) (string, error) {
+func (j JWTService) CreateToken(userId lib.BinaryUUID, email string, isAdmin bool) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		constants.UID:   userId,
 		constants.Email: email,
@@ -24,13 +27,13 @@ func (JWTService) CreateToken(userId lib.BinaryUUID, email string, isAdmin bool)
 		constants.Exp:   time.Now().Add(time.Minute * 15).Unix(),
 	})
 
-	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	tokenString, err := token.SignedString([]byte(j.env.JWTSecret))
 	return tokenString, err
 }
 
-func (JWTService) VerifyToken(tokenString string) (*jwt.Token, error) {
+func (j JWTService) VerifyToken(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(tokenString *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("JWT_SECRET")), nil
+		return []byte(j.env.JWTSecret), nil
 	})
 	if err != nil {
 		return nil, err

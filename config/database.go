@@ -2,8 +2,8 @@ package config
 
 import (
 	"fmt"
-	"os"
 
+	"github.com/Cyantosh0/gorm-crud/lib"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -13,8 +13,9 @@ type Database struct {
 	dsn string
 }
 
-func NewDatabase() Database {
-	url := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
+func NewDatabase(env *lib.Env) Database {
+	fmt.Println("CONSOLE", env.DBName)
+	url := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", env.DBUsername, env.DBPassword, env.DBHost, env.DBPort, env.DBName)
 
 	db, err := gorm.Open(mysql.Open(url))
 	if err != nil {

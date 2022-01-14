@@ -3,30 +3,32 @@ package config
 import (
 	"errors"
 	"fmt"
-	"os"
 
+	"github.com/Cyantosh0/gorm-crud/lib"
 	"github.com/Cyantosh0/gorm-crud/models"
 	"gorm.io/gorm"
 )
 
 type Seed struct {
-	db Database
+	db  Database
+	env *lib.Env
 }
 
-func NewSeed(db Database) Seed {
+func NewSeed(db Database, env *lib.Env) Seed {
 	return Seed{
-		db: db,
+		db:  db,
+		env: env,
 	}
 }
 
 func (s Seed) SeedAdminUser() {
-	err := s.db.First(&models.User{}, "email = ?", os.Getenv("ADMIN_EMAIL")).Error
+	err := s.db.First(&models.User{}, "email = ?", s.env.AdminEmail).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		s.db.Create(
 			&models.User{
-				Name:     os.Getenv("ADMIN_NAME"),
-				Email:    os.Getenv("ADMIN_EMAIL"),
-				Password: os.Getenv("ADMIN_PASSWORD"),
+				Name:     s.env.AdminName,
+				Email:    s.env.AdminEmail,
+				Password: s.env.AdminPassword,
 			})
 		fmt.Println("Admin User Created")
 	} else if err == nil {

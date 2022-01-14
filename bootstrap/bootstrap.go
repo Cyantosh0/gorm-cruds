@@ -11,12 +11,14 @@ import (
 	"github.com/Cyantosh0/gorm-crud/api/routes"
 	"github.com/Cyantosh0/gorm-crud/api/services"
 	"github.com/Cyantosh0/gorm-crud/config"
+	"github.com/Cyantosh0/gorm-crud/lib"
 )
 
 func StartApp() {
 	fx.New(
 		fx.Options(
 			config.Module,
+			lib.Module,
 			routes.Module,
 			middlewares.Module,
 			controllers.Module,
