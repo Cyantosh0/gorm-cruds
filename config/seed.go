@@ -19,15 +19,7 @@ func NewSeed(db Database) Seed {
 	}
 }
 
-func (s Seed) Run() {
-	fmt.Println("--- Running Seeder ---")
-
-	s.seedAdminUser()
-
-	fmt.Println("--- Seed Complete ---")
-}
-
-func (s Seed) seedAdminUser() {
+func (s Seed) SeedAdminUser() {
 	if err := s.db.First(&models.User{}, "email = ?", os.Getenv("ADMIN_EMAIL")).Error; errors.Is(err, gorm.ErrRecordNotFound) {
 		s.db.Create(
 			&models.User{
