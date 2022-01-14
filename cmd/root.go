@@ -3,11 +3,10 @@ package cmd
 import (
 	"github.com/Cyantosh0/gorm-crud/bootstrap"
 	"github.com/Cyantosh0/gorm-crud/cmd/cli"
-	"github.com/Cyantosh0/gorm-crud/config"
+	"github.com/Cyantosh0/gorm-crud/cmd/flags"
 	"github.com/Cyantosh0/gorm-crud/constants"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
-	"go.uber.org/fx"
 )
 
 var RootCmd = &cobra.Command{
@@ -21,23 +20,10 @@ var RootCmd = &cobra.Command{
 }
 
 func init() {
+	flags.Setup(RootCmd)
 	godotenv.Load()
-	RootCmd.AddCommand(cli.Version)
 
-	fx.New(
-		fx.Options(
-			fx.Provide(config.NewDatabase),
-			fx.Provide(config.NewMigrations),
-			fx.Provide(config.NewSeed),
-			fx.Invoke(runDependentCommands),
-		),
-	)
-}
-
-func runDependentCommands(
-	migration config.Migrations,
-	seed config.Seed,
-) {
-	migration.Migrate()
-	RootCmd.AddCommand(cli.AdminSeeder(seed))
+	for _, cmd := range cli.SubCommands {
+		RootCmd.AddCommand(cmd)
+	}
 }

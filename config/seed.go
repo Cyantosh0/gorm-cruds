@@ -20,7 +20,8 @@ func NewSeed(db Database) Seed {
 }
 
 func (s Seed) SeedAdminUser() {
-	if err := s.db.First(&models.User{}, "email = ?", os.Getenv("ADMIN_EMAIL")).Error; errors.Is(err, gorm.ErrRecordNotFound) {
+	err := s.db.First(&models.User{}, "email = ?", os.Getenv("ADMIN_EMAIL")).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		s.db.Create(
 			&models.User{
 				Name:     os.Getenv("ADMIN_NAME"),
@@ -28,5 +29,7 @@ func (s Seed) SeedAdminUser() {
 				Password: os.Getenv("ADMIN_PASSWORD"),
 			})
 		fmt.Println("Admin User Created")
+	} else if err == nil {
+		fmt.Println("Admin User Already Exists")
 	}
 }
