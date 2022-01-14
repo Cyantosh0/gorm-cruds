@@ -3,7 +3,6 @@ package bootstrap
 import (
 	"context"
 
-	"github.com/joho/godotenv"
 	"go.uber.org/fx"
 
 	"github.com/Cyantosh0/gorm-crud/api/controllers"
@@ -15,8 +14,6 @@ import (
 )
 
 func StartApp() {
-	godotenv.Load()
-
 	fx.New(
 		fx.Options(
 			config.Module,
@@ -41,7 +38,7 @@ func bootstrap(
 	lifecycle.Append(
 		fx.Hook{
 			OnStart: func(context.Context) error {
-				// migrations.Migrate()
+				migrations.Migrate()
 				routes.Setup()
 				go router.Run()
 				return nil
