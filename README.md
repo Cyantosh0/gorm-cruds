@@ -24,7 +24,7 @@ gorm-cruds is a Go application that demonstrates CRUD (Create, Read, Update, Del
 2. Navigate to the project directory:
 ```cd gorm-cruds```
 
-3. ### Configuration
+### Configuration
 
 1. Create a `.env` file in the project root directory based on the `.env.example` file.
 2. Update the environment variables in the `.env` file with your database connection details.
